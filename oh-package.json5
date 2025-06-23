@@ -1,0 +1,14 @@
+{
+  "name": "@free/navigation",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "Index.ets",
+  "author": {
+    "name": "余邦锦",
+    "email": "15179861454@163.com"
+  },
+  "homepage": "https://gitee.com/harmony-free",
+  "repository": "https://gitee.com/harmony-free/navigation",
+  "license": "MIT",
+  "dependencies": {}
+}
