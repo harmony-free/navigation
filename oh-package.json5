@@ -1,8 +1,17 @@
 {
   "name": "@free/navigation",
   "version": "1.0.0",
-  "description": "Please describe the basic information.",
+  "description": "这是鸿蒙版本基于navigation进行路由封装的库，push 前往 下一页、replace 页面重载、pop 返回 上一页、home 回到首页。",
   "main": "Index.ets",
+  "keywords": [
+    "navigation",
+    "nav",
+    "router",
+    "push",
+    "pop",
+    "replace",
+    "home",
+  ],
   "author": {
     "name": "余邦锦",
     "email": "15179861454@163.com"
