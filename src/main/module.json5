@@ -1,11 +1,12 @@
 {
-  "module": {
-    "name": "navigation",
-    "type": "har",
-    "deviceTypes": [
-      "default",
-      "tablet",
-      "2in1"
-    ]
-  }
+	"module": {
+		"name": "navigation",
+		"type": "har",
+		"deviceTypes": [
+			"default",
+			"tablet",
+			"2in1"
+		],
+		"routerMap": "$profile:route_map"
+	}
 }

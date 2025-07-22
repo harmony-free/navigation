@@ -96,6 +96,136 @@ export function NameBuilder(o: object) {
 nav.requestBuilder("name", wrapBuilder(NameBuilder)) 
 ```
 
+#### Plugin Details
+
+Hello, dear students! Good morning! Today, we are going to talk about the Navigation container navigation component commonly used in HONOR. During the development process, page navigation is quite common. Generally, an application has dozens or even hundreds of pages, so controlling page navigation is of utmost importance.
+
+一、First, it is necessary to understand the composition of the Navigation container navigation component. NavPathStack and NavDestination are the core components, along with a core attribute: navDestination(). The official documentation is quite elaborate, but the essence of it boils down to these three elements.
+
+1、The Navigation component is the main page component. Add this component to the @Entry page.
+
+```arkts
+@Entry
+@Component
+struct Index {
+    build() {
+        Navigation(){
+            
+        }
+    }
+}
+```
+
+2、NavPathStack is the key controller for managing page navigation.
+
+
+```arkts
+let navPathStack: NavPathStack = new NavPathStack();
+```
+
+3、NNavDestination is the component being navigated. It is a custom component decorated with @Component and needs to be invoked through a global dispatch call decorated with @Builder.
+
+
+```arkts
+@Builder
+export function testBuilder(o:object){
+  NavDestination(){
+    TestPage()
+  }
+}
+
+@Component
+export struct TestPage{
+  build() {
+    Text("TestPage")
+  }
+}
+```
+
+4、The "navDestination()" attribute of the Navigation component
+
+
+```arkts
+.navDestination((builderName: string, p: object) => {
+  if (builderName == "testBuilder") {
+    return wrapBuilder(testBuilder).builder(p)
+  }
+})
+
+```
+
+5、At this point, the entire page has reached a closed loop, and all the codes are listed.
+
+
+```arkts
+const navPathStack: NavPathStack = new NavPathStack();
+
+@Entry
+@Component
+struct Index {
+    build() {
+        Navigation(navPathStack){
+            Text("testPage").onClick(()=>{
+                navPathStack.pushPathByName("testPage",new Map)
+            })
+        }.navDestination((builderName: string, p: object) => {
+            if (builderName == "testBuilder") {
+            return wrapBuilder(testBuilder).builder(p)
+            }
+        })
+    }
+}
+
+@Builder
+export function testBuilder(o:object){
+  NavDestination(){
+    TestPage({o:o})
+  }
+}
+
+@Component
+export struct TestPage{
+  o: object|undefined
+  build() {
+    Column(){
+      Text("TestPage")
+      Text("Go back to the previous page").onClick(()=>{
+        navPathStack.pop()
+      })
+    }
+  }
+}
+```
+
+Are you a little surprised? Why is it only so little, when there are so many documents? Yes! Exactly! The main core is just written like this, but to handle the daily cumbersome requirements, these codes need to be encapsulated!
+
+Note: The complete code has been submitted to [HarmonyOS Third-Party Library](https://ohpm.openharmony.cn/#/cn/home),Use the following command to install.
+
+
+```
+ohpm install @free/navigation
+```
+
+
+Calling method: After writing the sub-page as described above, you need to register the requestBuilder for the sub-page.
+
+
+```arkts
+// Registration sub-page
+nav.requestBuilder('path',wrapBuilder(testBuilder))
+// Redirecting the page and receiving the returned parameters
+nav.push("path",new Map).then((data)=>{
+    if (data.data!=undefined) {
+        // TODO: Handle the return parameters
+    }
+})
+// Return to the page and pass the return parameter
+nav.pop(new Map);
+```
+
+If you like this content, please give a little heart!
+
+
 #### Contribution
 
 1.  Fork the repository

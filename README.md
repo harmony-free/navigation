@@ -96,6 +96,136 @@ export function NameBuilder(o: object) {
 nav.requestBuilder("name", wrapBuilder(NameBuilder)) // 注册组件到路由容器中
 ```
 
+#### 插件明细
+
+hello 各位同学，大家好！ 今天我们来讲讲关于鸿蒙里常用的Navigation容器导航组件。在开发的过程中，页面导航可谓是家常便饭，基本上一个应用有几十个甚至几百个页面，控制好页面导航是重中之重。
+
+一、首先要了解Navigation容器导航组件的构成。NavPathStack、NavDestination这两个是核心，外加一个核心属性.navDestination()。官方文档写的眼花缭乱，但是其中的本质就这三个。
+
+1、Navigation组件是主页面组件，在@Entry页面添加这个组件。
+
+```arkts
+@Entry
+@Component
+struct Index {
+    build() {
+        Navigation(){
+            
+        }
+    }
+}
+```
+
+2、NavPathStack是操控页面导航的关键控制器
+
+
+```arkts
+let navPathStack: NavPathStack = new NavPathStack();
+```
+
+3、NavDestination是被导航的组件，用@Component修饰的自定一组件，需要通过@Builder修饰的全局放发调用
+
+
+```arkts
+@Builder
+export function testBuilder(o:object){
+  NavDestination(){
+    TestPage()
+  }
+}
+
+@Component
+export struct TestPage{
+  build() {
+    Text("TestPage")
+  }
+}
+```
+
+4、Navigation组件.navDestination()属性
+
+
+```arkts
+.navDestination((builderName: string, p: object) => {
+  if (builderName == "testBuilder") {
+    return wrapBuilder(testBuilder).builder(p)
+  }
+})
+
+```
+
+5、在此整体页面达到闭环，列出全部代码。
+
+
+```arkts
+const navPathStack: NavPathStack = new NavPathStack();
+
+@Entry
+@Component
+struct Index {
+    build() {
+        Navigation(navPathStack){
+            Text("testPage").onClick(()=>{
+                navPathStack.pushPathByName("testPage",new Map)
+            })
+        }.navDestination((builderName: string, p: object) => {
+            if (builderName == "testBuilder") {
+            return wrapBuilder(testBuilder).builder(p)
+            }
+        })
+    }
+}
+
+@Builder
+export function testBuilder(o:object){
+  NavDestination(){
+    TestPage({o:o})
+  }
+}
+
+@Component
+export struct TestPage{
+  o: object|undefined
+  build() {
+    Column(){
+      Text("TestPage")
+      Text("回到上个页面").onClick(()=>{
+        navPathStack.pop()
+      })
+    }
+  }
+}
+```
+
+是不是有点惊讶，怎么才这么点，文档是那么多？对！没错！主要的核心就这么写，但是要应付日常繁琐的需求就要在这些代码进行封装了！
+
+注意：完整代码我已提交到[鸿蒙三方库](https://ohpm.openharmony.cn/#/cn/home)中，使用一下命令安装
+
+
+```
+ohpm install @free/navigation
+```
+
+
+调用方式，按照上面编写子页面后需要requestBuilder注册一下子页面
+
+
+```arkts
+// 注册子页面
+nav.requestBuilder('path',wrapBuilder(testBuilder))
+// 跳转页面以及接收返回参数
+nav.push("path",new Map).then((data)=>{
+    if (data.data!=undefined) {
+        // TODO: 处理返回参数
+    }
+})
+// 返回页面传递返回参数
+nav.pop(new Map);
+```
+
+喜欢本篇内容的话给个小爱心！
+
+
 #### 参与贡献
 
 1. Fork 本仓库
